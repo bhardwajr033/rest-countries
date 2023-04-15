@@ -1,0 +1,180 @@
+html {
+  font-size: 14px;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+/* title bar */
+
+.title-bar {
+  padding: 3rem 1rem 3rem 1rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  background: white;
+}
+
+.page-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.dark-mode {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.moon-icon {
+  width: 1rem;
+}
+
+.search-and-filter {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.5rem 0 1.5rem;
+  margin-top: 8rem;
+}
+
+/* search bar */
+
+.search-bar {
+  padding: 0;
+}
+
+.search-bar input {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 0.5rem;
+  border: none;
+  height: 4rem;
+  width: 40rem;
+  max-width: 100%;
+}
+
+.form .fa-search {
+  position: relative;
+  top: 2.7rem;
+  left: 2rem;
+}
+
+.form-input {
+  height: 55px;
+  text-indent: 33px;
+  border-radius: 10px;
+  padding-left: 2rem;
+}
+
+.form-input:focus {
+  box-shadow: none;
+  border: none;
+}
+
+/* filter bar */
+
+.filter-bar {
+  margin-top: 3rem;
+}
+
+.filter-bar .btn {
+  background: white;
+  color: black;
+  height: 4rem;
+  width: 20rem;
+  max-width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 0.5rem;
+  border: none;
+  text-align: start;
+  padding-left: 2rem;
+}
+
+.dropdown-menu {
+  background: white;
+  color: black;
+  width: 20rem;
+  max-width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 0.5rem;
+  border: none;
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+}
+
+/* section */
+
+section {
+  margin-top: 2rem;
+  padding: 1rem 2rem 1em 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem;
+  justify-content: center;
+}
+
+/* card */
+
+.card {
+  max-width: 30rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 1rem;
+}
+
+.card-img-top {
+  border-radius: 1rem 1rem 0 0;
+}
+
+.card-body {
+  padding: 2rem 1rem 1rem 3rem;
+}
+
+.card-body h2 {
+  padding-bottom: 1rem;
+}
+
+.card-text {
+  font-weight: 600;
+  line-height: 1rem;
+}
+
+.card-text span {
+  font-weight: 400;
+}
+
+@media (max-width: 340px) {
+  .search-and-filter {
+    margin-top: 10rem;
+  }
+}
+
+/* For Desktop */
+
+@media (min-width: 768px) {
+  /* search and filter bar */
+
+  .search-and-filter {
+    flex-direction: row;
+  }
+
+  .filter-bar {
+    margin-top: 1.5rem;
+  }
+
+  /* section */
+
+  section {
+    gap: 5rem;
+  }
+
+  .card {
+    width: auto;
+    max-width: 20rem;
+    border-radius: 0.5rem;
+  }
+
+  .card-img-top {
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+}
