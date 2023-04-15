@@ -46,7 +46,7 @@ header {
 }
 
 .search-bar input {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 12px;
   border-radius: 0.5rem;
   border: none;
   height: 4rem;
@@ -70,6 +70,7 @@ header {
 .form-input:focus {
   box-shadow: none;
   border: none;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 4px 12px;
 }
 
 /* filter bar */
@@ -84,11 +85,15 @@ header {
   height: 4rem;
   width: 20rem;
   max-width: 100%;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 12px;
   border-radius: 0.5rem;
   border: none;
   text-align: start;
   padding-left: 2rem;
+}
+
+.filter-bar .btn:focus {
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 4px 12px;
 }
 
 .dropdown-menu {
@@ -96,7 +101,7 @@ header {
   color: black;
   width: 20rem;
   max-width: 100%;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 12px;
   border-radius: 0.5rem;
   border: none;
   margin-top: 0.5rem;
@@ -118,12 +123,14 @@ section {
 
 .card {
   max-width: 30rem;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 12px;
   border-radius: 1rem;
 }
 
 .card-img-top {
   border-radius: 1rem 1rem 0 0;
+  width: 100%;
+  max-height: 14rem;
 }
 
 .card-body {
@@ -156,6 +163,7 @@ section {
 
   .search-and-filter {
     flex-direction: row;
+    padding: 0 2rem 0 2rem;;
   }
 
   .filter-bar {
@@ -165,12 +173,13 @@ section {
   /* section */
 
   section {
-    gap: 5rem;
+    gap: 3rem;
+    justify-content: space-between;
   }
 
   .card {
     width: auto;
-    max-width: 20rem;
+    max-width: 20%;
     border-radius: 0.5rem;
   }
 
