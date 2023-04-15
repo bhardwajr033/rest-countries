@@ -1,4 +1,4 @@
-DisplayContents();
+DisplayCounties();
 
 const filterMenu = document.querySelector(".dropdown-menu");
 
@@ -6,13 +6,11 @@ filterMenu.addEventListener("click", (event) => {
   DisplayFilteredCountries(event.target.textContent);
 });
 
-
 const searchText = document.querySelector(".search-text");
 
-searchText.addEventListener("keyup", (e)=>{
-    DisplaySearchedCountries(e.target.value)
-})
-
+searchText.addEventListener("keyup", (e) => {
+  DisplaySearchedCountries(e.target.value);
+});
 
 async function fetchCountryDetails() {
   try {
@@ -25,7 +23,7 @@ async function fetchCountryDetails() {
     const countriesDetails = countryData.reduce((acc, country) => {
       acc.push({
         name: country.name.official,
-        population: (country.population).toLocaleString("en-US"),
+        population: country.population.toLocaleString("en-US"),
         region: country.region,
         capital: (country.capital || ["Not Found"])[0],
         flag: country.flags.svg,
@@ -63,13 +61,10 @@ function createElementFromHTML(htmlString) {
   return div.firstChild;
 }
 
-let countriesDetails;
-
-async function DisplayContents() {
-  countriesDetails = await fetchCountryDetails().catch((error) =>
+async function DisplayCounties() {
+  const countriesDetails = await fetchCountryDetails().catch((error) =>
     console.log(error)
   );
-  // console.log(countriesDetails);
   for (let i = 0; i < countriesDetails.length; i++) {
     const htmlString = `
         <div class="card" style="width: 100%">
@@ -80,7 +75,7 @@ async function DisplayContents() {
                     Population : <span>${countriesDetails[i].population}</span>
                 </p>
                 <p class="card-text">
-                    Region : <span>${countriesDetails[i].region}</span>
+                    Region : <span class="region">${countriesDetails[i].region}</span>
                 </p>
                 <p class="card-text">
                     Capital : <span>${countriesDetails[i].capital}</span>
@@ -92,97 +87,45 @@ async function DisplayContents() {
   }
 }
 
-async function DisplayFilteredCountries(filterValue) {
-  const boxes = document.querySelectorAll(".card");
-  boxes.forEach((box) => {
-    box.remove();
-  });
-
-  if (filterValue === "All") {
-    DisplayContents();
-    return;
-  }
-
-  if(!countriesDetails){
-    countriesDetails = await fetchCountryDetails().catch((error) =>
-    console.log(error)
-  );
-  }
-
+function DisplayFilteredCountries(filterValue) {
   const filterButtonText = document.querySelector(".filter-button");
   filterButtonText.textContent = `Filter by Region - ${filterValue}`;
 
-  const filteredCountries = countriesDetails.filter(
-    (country) => country.region === filterValue
-  );
-  for (let i = 0; i < filteredCountries.length; i++) {
-    const htmlString = `
-            <div class="card" style="width: 100%">
-                <img src="${filteredCountries[i].flag}" class="card-img-top" alt="" />
-                <div class="card-body">
-                    <h2 class="card-title">${filteredCountries[i].name}</h2>
-                    <p class="card-text">
-                        Population : <span>${filteredCountries[i].population}</span>
-                    </p>
-                    <p class="card-text">
-                        Region : <span>${filteredCountries[i].region}</span>
-                    </p>
-                    <p class="card-text">
-                        Capital : <span>${filteredCountries[i].capital}</span>
-                    </p>
-                </div>
-            </div>`;
-    const card = createElementFromHTML(htmlString);
-    document.querySelector(".country-cards").appendChild(card);
-  }
-}
+  const countries = document.querySelectorAll(".card");
 
-let searchTextValueLast;
-async function DisplaySearchedCountries(searchTextValue){
-
-    if (searchTextValue === searchTextValueLast){
-        return;
-    }
-    searchTextValueLast = searchTextValue;
-
-    const boxes = document.querySelectorAll(".card");
-  boxes.forEach((box) => {
-    box.remove();
-  });
-
-  if(searchTextValue === ''){
-    DisplayContents();
+  if (filterValue === "All") {
+    Array.from(countries).forEach((country) => {
+      const countryRegion = country.querySelector(".region").textContent;
+      country.style.display = "";
+    });
     return;
   }
 
-  if(!countriesDetails){
-    countriesDetails = await fetchCountryDetails().catch((error) =>
-    console.log(error)
-  );
-  }
+  Array.from(countries).forEach((country) => {
+    const countryRegion = country.querySelector(".region").textContent;
+    if (countryRegion === filterValue) {
+      country.style.display = "";
+    } else {
+      country.style.display = "none";
+    }
+  });
+}
 
-  const filteredCountries = countriesDetails.filter(
-    (country) => country.name.toLowerCase().includes(searchTextValue.toLowerCase())
-  );
-  for (let i = 0; i < filteredCountries.length; i++) {
-    const htmlString = `
-            <div class="card" style="width: 100%">
-                <img src="${filteredCountries[i].flag}" class="card-img-top" alt="" />
-                <div class="card-body">
-                    <h2 class="card-title">${filteredCountries[i].name}</h2>
-                    <p class="card-text">
-                        Population : <span>${filteredCountries[i].population}</span>
-                    </p>
-                    <p class="card-text">
-                        Region : <span>${filteredCountries[i].region}</span>
-                    </p>
-                    <p class="card-text">
-                        Capital : <span>${filteredCountries[i].capital}</span>
-                    </p>
-                </div>
-            </div>`;
-    const card = createElementFromHTML(htmlString);
-    document.querySelector(".country-cards").appendChild(card);
+let searchTextValueLast;
+function DisplaySearchedCountries(searchTextValue) {
+  if (searchTextValue === searchTextValueLast) {
+    return;
   }
+  searchTextValueLast = searchTextValue;
 
+  const countries = document.querySelectorAll(".card");
+
+  Array.from(countries).forEach((country) => {
+    const countryName = country.querySelector(".card-title").textContent;
+    if (!countryName.toLowerCase().includes(searchTextValue.toLowerCase())) {
+      country.style.display = "none";
+    } else {
+      country.style.display = "";
+    }
+  });
 }
