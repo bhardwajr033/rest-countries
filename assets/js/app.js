@@ -1,15 +1,15 @@
-DisplayCounties();
+displayCounties();
 
 const filterMenu = document.querySelector(".dropdown-menu");
 
 filterMenu.addEventListener("click", (event) => {
-  DisplayFilteredCountries(event.target.textContent);
+  displayFilteredCountries(event.target.textContent);
 });
 
 const searchText = document.querySelector(".search-text");
 
 searchText.addEventListener("keyup", (e) => {
-  DisplaySearchedCountries(e.target.value);
+  displaySearchedCountries(e.target.value);
 });
 
 async function fetchCountryDetails() {
@@ -61,7 +61,7 @@ function createElementFromHTML(htmlString) {
   return div.firstChild;
 }
 
-async function DisplayCounties() {
+async function displayCounties() {
   const countriesDetails = await fetchCountryDetails().catch((error) =>
     console.log(error)
   );
@@ -87,7 +87,7 @@ async function DisplayCounties() {
   }
 }
 
-function DisplayFilteredCountries(filterValue) {
+function displayFilteredCountries(filterValue) {
   const filterButtonText = document.querySelector(".filter-button");
   filterButtonText.textContent = `Filter by Region - ${filterValue}`;
 
@@ -111,12 +111,12 @@ function DisplayFilteredCountries(filterValue) {
   });
 }
 
-let searchTextValueLast;
-function DisplaySearchedCountries(searchTextValue) {
-  if (searchTextValue === searchTextValueLast) {
+let lastSearchTextValue;
+function displaySearchedCountries(searchTextValue) {
+  if (searchTextValue === lastSearchTextValue) {
     return;
   }
-  searchTextValueLast = searchTextValue;
+  lastSearchTextValue = searchTextValue;
 
   const countries = document.querySelectorAll(".card");
 
