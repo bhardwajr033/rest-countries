@@ -1,3 +1,19 @@
+DisplayContents();
+
+const filterMenu = document.querySelector(".dropdown-menu");
+
+filterMenu.addEventListener("click", (event) => {
+  DisplayFilteredCountries(event.target.textContent);
+});
+
+
+const searchText = document.querySelector(".search-text");
+
+searchText.addEventListener("keyup", (e)=>{
+    DisplaySearchedCountries(e.target.value)
+})
+
+
 async function fetchCountryDetails() {
   try {
     const response = await fetch("https://restcountries.com/v3.1/all");
@@ -9,7 +25,7 @@ async function fetchCountryDetails() {
     const countriesDetails = countryData.reduce((acc, country) => {
       acc.push({
         name: country.name.official,
-        population: country.population,
+        population: (country.population).toLocaleString("en-US"),
         region: country.region,
         capital: (country.capital || ["Not Found"])[0],
         flag: country.flags.svg,
@@ -121,10 +137,52 @@ async function DisplayFilteredCountries(filterValue) {
   }
 }
 
-DisplayContents();
+let searchTextValueLast;
+async function DisplaySearchedCountries(searchTextValue){
 
-const filterMenu = document.querySelector(".dropdown-menu");
+    if (searchTextValue === searchTextValueLast){
+        return;
+    }
+    searchTextValueLast = searchTextValue;
 
-filterMenu.addEventListener("click", (event) => {
-  DisplayFilteredCountries(event.target.textContent);
-});
+    const boxes = document.querySelectorAll(".card");
+  boxes.forEach((box) => {
+    box.remove();
+  });
+
+  if(searchTextValue === ''){
+    DisplayContents();
+    return;
+  }
+
+  if(!countriesDetails){
+    countriesDetails = await fetchCountryDetails().catch((error) =>
+    console.log(error)
+  );
+  }
+
+  const filteredCountries = countriesDetails.filter(
+    (country) => country.name.toLowerCase().includes(searchTextValue.toLowerCase())
+  );
+  for (let i = 0; i < filteredCountries.length; i++) {
+    const htmlString = `
+            <div class="card" style="width: 100%">
+                <img src="${filteredCountries[i].flag}" class="card-img-top" alt="" />
+                <div class="card-body">
+                    <h2 class="card-title">${filteredCountries[i].name}</h2>
+                    <p class="card-text">
+                        Population : <span>${filteredCountries[i].population}</span>
+                    </p>
+                    <p class="card-text">
+                        Region : <span>${filteredCountries[i].region}</span>
+                    </p>
+                    <p class="card-text">
+                        Capital : <span>${filteredCountries[i].capital}</span>
+                    </p>
+                </div>
+            </div>`;
+    const card = createElementFromHTML(htmlString);
+    document.querySelector(".country-cards").appendChild(card);
+  }
+
+}

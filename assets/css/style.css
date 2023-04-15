@@ -174,13 +174,14 @@ section {
 
   section {
     gap: 3rem;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   .card {
     width: auto;
     max-width: 20%;
     border-radius: 0.5rem;
+
   }
 
   .card-img-top {
