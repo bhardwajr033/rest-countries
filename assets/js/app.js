@@ -1,4 +1,4 @@
-displayCounties();
+insertCountryCards();
 
 const filterMenu = document.querySelector(".dropdown-menu");
 
@@ -8,29 +8,45 @@ filterMenu.addEventListener("click", (event) => {
 
 const searchText = document.querySelector(".search-text");
 
-searchText.addEventListener("keyup", (e) => {
-  displaySearchedCountries(e.target.value);
+searchText.addEventListener("keyup", (event) => {
+  displaySearchedCountries(event.target.value);
+});
+
+const countryCardClick = document.querySelector(".country-cards");
+
+countryCardClick.addEventListener("click", (event) => {
+  const countryName =
+    event.target.parentNode.querySelector(".card-title").textContent;
+  sessionStorage;
+  sessionStorage.setItem("countryName", countryName);
 });
 
 async function fetchCountryDetails() {
+  const countriesDetails = JSON.parse(
+    sessionStorage.getItem("countriesDetails")
+  );
+  if (countriesDetails) {
+    return countriesDetails;
+  }
+
   try {
     const response = await fetch("https://restcountries.com/v3.1/all");
     const countryData = await response.json();
     const countryCodes = countryData.reduce((acc, country) => {
-      acc[country.fifa] = country.name.official;
+      acc[country.cca3] = country.name.common;
       return acc;
     }, {});
     const countriesDetails = countryData.reduce((acc, country) => {
-      acc.push({
-        name: country.name.official,
+      acc[country.name.common] = {
+        name: country.name.common,
         population: country.population.toLocaleString("en-US"),
         region: country.region,
         capital: (country.capital || ["Not Found"])[0],
         flag: country.flags.svg,
         //for detail page
         nativeName: Object.values(
-          country.name.nativeName || { official: "Not Found" }
-        )[0].official,
+          country.name.nativeName || { common: "Not Found" }
+        )[0].common,
         subregion: country.subregion,
         topLevelDomain: (country.tld || ["Not Found"])[0],
         currencies: Object.values(
@@ -46,9 +62,10 @@ async function fetchCountryDetails() {
             return acc;
           }, [])
           .filter((country) => country),
-      });
+      };
       return acc;
-    }, []);
+    }, {});
+
     return countriesDetails;
   } catch (error) {
     return error;
@@ -61,27 +78,35 @@ function createElementFromHTML(htmlString) {
   return div.firstChild;
 }
 
-async function displayCounties() {
+async function insertCountryCards() {
   const countriesDetails = await fetchCountryDetails().catch((error) =>
     console.log(error)
   );
-  for (let i = 0; i < countriesDetails.length; i++) {
+
+  sessionStorage; // session store countriesDetail
+  sessionStorage.setItem("countriesDetails", JSON.stringify(countriesDetails));
+
+  const countriesDetailsArray = Object.values(countriesDetails);
+
+  for (let i = 0; i < countriesDetailsArray.length; i++) {
     const htmlString = `
+        <a href="detail.html" class="card-click">
         <div class="card" style="width: 100%">
-            <img src="${countriesDetails[i].flag}" class="card-img-top" alt="" />
+            <img src="${countriesDetailsArray[i].flag}" class="card-img-top" alt="" />
             <div class="card-body">
-                <h2 class="card-title">${countriesDetails[i].name}</h2>
+                <h2 class="card-title">${countriesDetailsArray[i].name}</h2>
                 <p class="card-text">
-                    Population : <span>${countriesDetails[i].population}</span>
+                    Population : <span>${countriesDetailsArray[i].population}</span>
                 </p>
                 <p class="card-text">
-                    Region : <span class="region">${countriesDetails[i].region}</span>
+                    Region : <span class="region">${countriesDetailsArray[i].region}</span>
                 </p>
                 <p class="card-text">
-                    Capital : <span>${countriesDetails[i].capital}</span>
+                    Capital : <span>${countriesDetailsArray[i].capital}</span>
                 </p>
             </div>
-        </div>`;
+        </div>
+        </a>`;
     const card = createElementFromHTML(htmlString);
     document.querySelector(".country-cards").appendChild(card);
   }
@@ -91,11 +116,10 @@ function displayFilteredCountries(filterValue) {
   const filterButtonText = document.querySelector(".filter-button");
   filterButtonText.textContent = `Filter by Region - ${filterValue}`;
 
-  const countries = document.querySelectorAll(".card");
+  const countries = document.querySelectorAll(".card-click");
 
   if (filterValue === "All") {
     Array.from(countries).forEach((country) => {
-      const countryRegion = country.querySelector(".region").textContent;
       country.style.display = "";
     });
     return;
@@ -118,7 +142,7 @@ function displaySearchedCountries(searchTextValue) {
   }
   lastSearchTextValue = searchTextValue;
 
-  const countries = document.querySelectorAll(".card");
+  const countries = document.querySelectorAll(".card-click");
 
   Array.from(countries).forEach((country) => {
     const countryName = country.querySelector(".card-title").textContent;
