@@ -73,7 +73,7 @@ async function fetchCountryDetails() {
 }
 
 function createElementFromHTML(htmlString) {
-  var div = document.createElement("div");
+  const div = document.createElement("div");
   div.innerHTML = htmlString.trim();
   return div.firstChild;
 }
@@ -114,7 +114,7 @@ async function insertCountryCards() {
 
 let lastFilteredValue = "All";
 function displayFilteredCountries(filterValue) {
-  if (filterValue === lastFilteredValue){
+  if (filterValue === lastFilteredValue) {
     return;
   }
 
@@ -125,17 +125,35 @@ function displayFilteredCountries(filterValue) {
 
   const countries = document.querySelectorAll(".card-click");
 
-  if (filterValue === "All" && lastSearchTextValue === "") {
-    Array.from(countries).forEach((country) => {
-      country.style.display = "block";
-    });
-    return;
+  if (filterValue === "All") {
+    if (lastSearchTextValue === "") {
+      Array.from(countries).forEach((country) => {
+        country.style.display = "block";
+      });
+      return;
+    } else {
+      Array.from(countries).forEach((country) => {
+        const countryName = country.querySelector(".card-title").textContent;
+        if (
+          countryName.toLowerCase().includes(lastSearchTextValue.toLowerCase())
+        ) {
+          country.style.display = "block";
+        } else {
+          country.style.display = "none";
+        }
+      });
+      return;
+    }
   }
 
   Array.from(countries).forEach((country) => {
     const countryRegion = country.querySelector(".region").textContent;
     const countryName = country.querySelector(".card-title").textContent;
-    if (countryRegion === filterValue && (countryName.toLowerCase().includes(lastSearchTextValue.toLowerCase()) || lastSearchTextValue==="")) {
+    if (
+      countryRegion === filterValue &&
+      (countryName.toLowerCase().includes(lastSearchTextValue.toLowerCase()) ||
+        lastSearchTextValue === "")
+    ) {
       country.style.display = "block";
     } else {
       country.style.display = "none";
@@ -155,7 +173,10 @@ function displaySearchedCountries(searchTextValue) {
   Array.from(countries).forEach((country) => {
     const countryRegion = country.querySelector(".region").textContent;
     const countryName = country.querySelector(".card-title").textContent;
-    if (countryName.toLowerCase().includes(searchTextValue.toLowerCase()) && (countryRegion === lastFilteredValue || lastFilteredValue==="All")) {
+    if (
+      countryName.toLowerCase().includes(searchTextValue.toLowerCase()) &&
+      (countryRegion === lastFilteredValue || lastFilteredValue === "All")
+    ) {
       country.style.display = "block";
     } else {
       country.style.display = "none";
