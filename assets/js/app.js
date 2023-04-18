@@ -9,7 +9,7 @@ filterMenu.addEventListener("click", (event) => {
 const searchText = document.querySelector(".search-text");
 
 searchText.addEventListener("keyup", (event) => {
-  displaySearchedCountries(event.target.value);
+  displaySearchedCountries(event.target.value.trim());
 });
 
 const countryCardClick = document.querySelector(".country-cards");
@@ -112,30 +112,38 @@ async function insertCountryCards() {
   }
 }
 
+let lastFilteredValue = "All";
 function displayFilteredCountries(filterValue) {
+  if (filterValue === lastFilteredValue){
+    return;
+  }
+
+  lastFilteredValue = filterValue;
+
   const filterButtonText = document.querySelector(".filter-button");
   filterButtonText.textContent = `Filter by Region - ${filterValue}`;
 
   const countries = document.querySelectorAll(".card-click");
 
-  if (filterValue === "All") {
+  if (filterValue === "All" && lastSearchTextValue === "") {
     Array.from(countries).forEach((country) => {
-      country.style.display = "";
+      country.style.display = "block";
     });
     return;
   }
 
   Array.from(countries).forEach((country) => {
     const countryRegion = country.querySelector(".region").textContent;
-    if (countryRegion === filterValue) {
-      country.style.display = "";
+    const countryName = country.querySelector(".card-title").textContent;
+    if (countryRegion === filterValue && (countryName.toLowerCase().includes(lastSearchTextValue.toLowerCase()) || lastSearchTextValue==="")) {
+      country.style.display = "block";
     } else {
       country.style.display = "none";
     }
   });
 }
 
-let lastSearchTextValue;
+let lastSearchTextValue = "";
 function displaySearchedCountries(searchTextValue) {
   if (searchTextValue === lastSearchTextValue) {
     return;
@@ -145,11 +153,12 @@ function displaySearchedCountries(searchTextValue) {
   const countries = document.querySelectorAll(".card-click");
 
   Array.from(countries).forEach((country) => {
+    const countryRegion = country.querySelector(".region").textContent;
     const countryName = country.querySelector(".card-title").textContent;
-    if (!countryName.toLowerCase().includes(searchTextValue.toLowerCase())) {
-      country.style.display = "none";
+    if (countryName.toLowerCase().includes(searchTextValue.toLowerCase()) && (countryRegion === lastFilteredValue || lastFilteredValue==="All")) {
+      country.style.display = "block";
     } else {
-      country.style.display = "";
+      country.style.display = "none";
     }
   });
 }
