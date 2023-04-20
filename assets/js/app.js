@@ -15,10 +15,12 @@ searchText.addEventListener("keyup", (event) => {
 const countryCardClick = document.querySelector(".country-cards");
 
 countryCardClick.addEventListener("click", (event) => {
-  const countryName =
-    event.target.parentNode.querySelector(".card-title").textContent;
-  sessionStorage;
-  sessionStorage.setItem("countryName", countryName);
+  try {
+    const countryName = event.target
+      .closest(".card")
+      .querySelector(".card-title").textContent;
+    sessionStorage.setItem("countryName", countryName);
+  } catch (error) {}
 });
 
 async function fetchCountryDetails() {
